@@ -1,5 +1,5 @@
 const { request, response } = require('express');
-const Usuario = require('../models/usuario'); //Con la U mayuscula permite crear instancias de mi modelo
+const { Usuario } = require('../models'); //Con la U mayuscula permite crear instancias de mi modelo
 const bcryptjs = require('bcryptjs');
 
 const usuariosGet = async( req = request, res = response ) => { // igualamos res a response para que res
@@ -39,8 +39,9 @@ const usuariosPut = async ( req, res ) => {
         resto.password = bcryptjs.hashSync( password, salt );
     }
 
-    //Buscamos por el id y actulizamos la informacion que esta en la variable resto
-    const usuario = await Usuario.findByIdAndUpdate( id, resto );
+    //Buscamos por el id y actulizamos la informacion que esta en la variable resto, 
+    //el parámetro new : true regresa el documento actualizado
+    const usuario = await Usuario.findByIdAndUpdate( id, resto , { new : true });
 
     res.json(usuario);
 
@@ -72,7 +73,7 @@ const usuariosDelete = async( req, res ) => {
     //Borrar fisicamente
     // const usuario = await Usuario.findByIdAndDelete( id );
 
-    const usuario = await Usuario.findByIdAndUpdate( id, { estado : false });
+    const usuario = await Usuario.findByIdAndUpdate( id, { estado : false }, { new : true });
     res.json(usuario);
 }
 
